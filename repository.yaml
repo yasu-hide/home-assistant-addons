@@ -1,0 +1,5 @@
+# https://developers.home-assistant.io/docs/add-ons/repository#repository-configuration
+# This is a source repository that automatically syncs to the production add-ons suite
+name: "Addons by yasu-hide"
+url: "https://github.com/yasu-hide/home-assistant-addons"
+maintainer: "yasu-hide"
