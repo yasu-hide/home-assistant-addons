@@ -1,0 +1,20 @@
+name: "remo-exporter"
+description: "Prometheus Nature Remo Exporter"
+version: "0.0.0"
+slug: "remo_exporter"
+init: false
+url: "https://github.com/kenfdev/remo-exporter/"
+panel_icon: "mdi:remote"
+startup: services
+arch:
+  - aarch64
+  - amd64
+options:
+  OAUTH_TOKEN: ""
+
+schema:
+  OAUTH_TOKEN: password
+  METRICS_PATH: str?
+  API_BASE_URL: url?
+  PORT: port?
+  CACHE_INVALIDATION_SECONDS: int?
