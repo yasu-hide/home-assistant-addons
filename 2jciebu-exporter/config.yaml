@@ -1,9 +1,9 @@
-name: "2jciebu-prometheus"
+name: "2jciebu-exporter"
 description: "Prometheus exporter for OMRON USB Environment Sensor 2JCIE-BU"
 version: "0.0.0"
-slug: "2jciebu_prometheus"
+slug: "2jciebu_exporter"
 init: false
-url: "https://github.com/yasu-hide/2jciebu-prometheus/"
+url: "https://github.com/yasu-hide/2jciebu-exporter/"
 panel_icon: "mdi:thermometer"
 startup: services
 arch:

@@ -1,5 +1,5 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/base:19.0.0
-FROM vet5lqplpecmpnqb/2jciebu-prometheus:latest AS source
+FROM vet5lqplpecmpnqb/2jciebu-exporter:latest AS source
 FROM ${BUILD_FROM}
 
 # Set shell
