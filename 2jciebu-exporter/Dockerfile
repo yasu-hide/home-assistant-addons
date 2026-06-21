@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:19.0.0
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:21.0.0
 FROM vet5lqplpecmpnqb/2jciebu-exporter:latest AS source
 FROM ${BUILD_FROM}
 
@@ -13,8 +13,8 @@ RUN apk add --no-cache python3 py3-pip && \
 
 # Copy program
 WORKDIR /app
-COPY --from=source /tmp/main.py /app/main.py
-COPY --from=source /tmp/sensor.py /app/sensor.py
+COPY --from=source /app/main.py /app/main.py
+COPY --from=source /app/sensor.py /app/sensor.py
 COPY run.sh /app/run.sh
 RUN chmod a+x /app/main.py /app/sensor.py /app/run.sh
 
