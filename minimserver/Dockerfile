@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:21.0.0
+ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.5.1
 ARG TARGETARCH
 
 # Download the official MinimServer 2.2 Linux archive for each architecture.
@@ -26,9 +26,11 @@ RUN apk add --no-cache curl && \
 # Select the MinimServer archive for the requested build architecture.
 FROM minimserver_${TARGETARCH} AS minimserver
 
-# Select the official Eclipse Temurin 25 JRE Alpine image by architecture.
-FROM --platform=linux/amd64 eclipse-temurin:25-jre-alpine AS temurin_amd64
-FROM --platform=linux/arm64 eclipse-temurin:25-jre-alpine AS temurin_arm64
+# Select the official Eclipse Temurin 25 JRE (glibc) image by architecture.
+# MinimServer bundles glibc-built native libraries (libohNet.so), so a glibc
+# runtime is required; musl/Alpine cannot load them.
+FROM --platform=linux/amd64 eclipse-temurin:25-jre-noble AS temurin_amd64
+FROM --platform=linux/arm64 eclipse-temurin:25-jre-noble AS temurin_arm64
 FROM temurin_${TARGETARCH} AS temurin
 
 # Final Home Assistant app image.
