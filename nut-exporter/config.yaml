@@ -1,6 +1,6 @@
 name: "nut_exporter"
 description: "Network UPS Tools (NUT) Prometheus Exporter"
-version: "0.0.0"
+version: "3.3.0"
 slug: "nut_exporter"
 init: false
 url: "https://github.com/druggeri/nut_exporter/"

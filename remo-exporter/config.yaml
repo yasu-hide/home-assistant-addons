@@ -1,6 +1,6 @@
 name: "remo-exporter"
 description: "Prometheus Nature Remo Exporter"
-version: "0.0.0"
+version: "0.8.1"
 slug: "remo_exporter"
 init: false
 url: "https://github.com/kenfdev/remo-exporter/"
