@@ -1,6 +1,6 @@
 name: "MinimServer"
 description: "UPnP/DLNA music server"
-version: "0.1.0"
+version: "0.1.1"
 slug: "minimserver"
 url: "https://github.com/yasu-hide/minimserver-docker"
 startup: services
