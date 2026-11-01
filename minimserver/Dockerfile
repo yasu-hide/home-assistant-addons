@@ -9,9 +9,13 @@ FROM --platform=linux/arm64 minimworld/minimserver:latest-arm64 AS minimserver_a
 # Select the upstream MinimServer image for the requested build architecture.
 FROM minimserver_${TARGETARCH} AS minimserver
 
-# Use the official Eclipse Temurin Java 25 JRE for Alpine. The image is
-# multi-architecture (amd64/arm64) and uses musl, matching the HA base image.
-FROM eclipse-temurin:25-jre-alpine AS temurin
+# Temurin publishes a multi-platform Alpine image. Declare explicit platform
+# stages as well, so the selected JRE architecture follows TARGETARCH.
+FROM --platform=linux/amd64 eclipse-temurin:25-jre-alpine AS temurin_amd64
+FROM --platform=linux/arm64 eclipse-temurin:25-jre-alpine AS temurin_arm64
+
+# Select the Temurin JRE for the requested build architecture.
+FROM temurin_${TARGETARCH} AS temurin
 
 # Final Home Assistant app image, following the multi-stage pattern used by
 # the other apps in this repository.
@@ -19,7 +23,7 @@ FROM ${BUILD_FROM}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Copy MinimServer and the complete Temurin JRE into the Home Assistant image.
+# Copy MinimServer and the matching Temurin JRE into the Home Assistant image.
 COPY --from=minimserver /opt/minimserver /opt/minimserver
 COPY --from=temurin /opt/java/openjdk /opt/java/openjdk
 COPY run.sh /app/run.sh
