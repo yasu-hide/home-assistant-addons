@@ -12,7 +12,7 @@ arch:
 panel_icon: "mdi:music"
 host_network: true
 map:
-  - type: addon_config
+  - type: app_config
     path: /MinimServer
     read_only: true
   - type: media

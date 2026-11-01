@@ -5,7 +5,7 @@ ARG TARGETARCH
 # The archive checksums are verified before extraction.
 FROM --platform=linux/amd64 alpine:3.22 AS minimserver_amd64
 ARG MINIMSERVER_ESUM="b0ebeb11eac35dec5ca57c647a8a91a0b3b787c83c8f5c35bd782cfa3a6440c6"
-ARG MINIMSERVER_URL="https://minimworld.com/files/90a5236a837b2de4f0ab41ce4d80f917/MinimServer-2.2-linux-intel.tar.gz"
+ARG MINIMSERVER_URL="https://minimworld.com/files/bef84450edd39a8c1f3102d6fc241e20/MinimServer-2.2-linux-intel.tar.gz"
 RUN apk add --no-cache curl && \
     mkdir -p /opt/minimserver && \
     curl -LfsSo /tmp/minimserver.tar.gz "${MINIMSERVER_URL}" && \
@@ -15,7 +15,7 @@ RUN apk add --no-cache curl && \
 
 FROM --platform=linux/arm64 alpine:3.22 AS minimserver_arm64
 ARG MINIMSERVER_ESUM="5b9e028aafb842e3645ae4821b1b1a1639d3c76806907a2ce1b5f8309dde01db"
-ARG MINIMSERVER_URL="https://minimworld.com/files/90a5236a837b2de4f0ab41ce4d80f917/MinimServer-2.2-linux-arm64.tar.gz"
+ARG MINIMSERVER_URL="https://minimworld.com/files/bef84450edd39a8c1f3102d6fc241e20/MinimServer-2.2-linux-arm64.tar.gz"
 RUN apk add --no-cache curl && \
     mkdir -p /opt/minimserver && \
     curl -LfsSo /tmp/minimserver.tar.gz "${MINIMSERVER_URL}" && \
