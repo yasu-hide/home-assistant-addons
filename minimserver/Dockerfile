@@ -36,9 +36,6 @@ FROM ${BUILD_FROM}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# MinimServer's Linux binaries may require glibc compatibility libraries.
-RUN apk add --no-cache gcompat libstdc++
-
 COPY --from=minimserver /opt/minimserver /opt/minimserver
 COPY --from=temurin /opt/java/openjdk /opt/java/openjdk
 COPY run.sh /app/run.sh
