@@ -6,13 +6,15 @@ this repository:
 
 1. Use the architecture-specific upstream `minimworld/minimserver` image as
    a build stage.
-2. Replace its bundled Java runtime with Eclipse Temurin 25, verifying the
-   downloaded archive with its SHA-256 checksum.
-3. Copy the MinimServer application and Temurin runtime into the final
-   Home Assistant base image.
+2. Obtain the Java 25 JRE from the official multi-architecture
+   `eclipse-temurin:25-jre-alpine` image.
+3. Copy the MinimServer application and the complete Temurin JRE into the
+   final Home Assistant base image.
 
-The Java replacement follows
-[yasu-hide/minimserver-docker](https://github.com/yasu-hide/minimserver-docker).
+The Java runtime selection follows
+[yasu-hide/minimserver-docker](https://github.com/yasu-hide/minimserver-docker),
+but uses the official Alpine-based Temurin JRE image instead of downloading
+and extracting a JDK archive.
 
 ## Storage
 
@@ -52,15 +54,15 @@ and library scan status on the Status page.
 The app supports Home Assistant OS on `aarch64` (including Raspberry Pi 4
 running 64-bit HAOS) and `amd64`.
 
-The upstream image is selected per architecture. The final image is based on
-the Home Assistant base image used by the other apps in this repository.
-The Dockerfile installs `gcompat` and `libstdc++` for the glibc-based
-Temurin runtime on Alpine.
+The upstream MinimServer image is selected per architecture. The Temurin
+Alpine JRE image provides Java 25 for both `amd64` and `arm64`; its Java
+runtime is copied into the final Home Assistant image at
+`/opt/java/openjdk`.
 
 The Dockerfile and startup script have not yet been built or run on HAOS.
-In particular, the Java runtime's compatibility with the selected Home
-Assistant base image must be verified by building and starting the app on
-both target architectures.
+In particular, MinimServer's compatibility with the Alpine/musl Java runtime
+and the final Home Assistant base image must be verified by building and
+starting the app on both target architectures.
 
 ## Licensing
 
