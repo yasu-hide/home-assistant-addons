@@ -1,0 +1,21 @@
+name: "MinimServer"
+description: "UPnP/DLNA music server"
+version: "0.1.0"
+slug: "minimserver"
+url: "https://github.com/yasu-hide/minimserver-docker"
+startup: services
+boot: auto
+init: false
+arch:
+  - aarch64
+  - amd64
+panel_icon: "mdi:music"
+host_network: true
+map:
+  - type: media
+    read_only: true
+  - type: data
+    path: /opt/minimserver/data
+    read_only: false
+options: {}
+schema: {}
