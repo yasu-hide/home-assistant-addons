@@ -3,7 +3,7 @@ ARG TARGETARCH
 
 # Download the official MinimServer Linux archive for each architecture.
 # The archive checksums are verified before extraction.
-FROM --platform=linux/amd64 alpine:3.22 AS minimserver_amd64
+FROM --platform=linux/amd64 alpine:3.24 AS minimserver_amd64
 ARG MINIMSERVER_KIND="linux_x64_server"
 COPY minimserver-download.sh /usr/local/bin/minimserver-download.sh
 COPY checksum.txt /tmp/checksum.txt
@@ -16,7 +16,7 @@ RUN apk add --no-cache bash curl && \
     tar xf "/tmp/${file}" -C /opt/minimserver --strip-components=1 && \
     rm -f "/tmp/${file}"
 
-FROM --platform=linux/arm64 alpine:3.22 AS minimserver_arm64
+FROM --platform=linux/arm64 alpine:3.24 AS minimserver_arm64
 ARG MINIMSERVER_KIND="linux_arm64_server"
 COPY minimserver-download.sh /usr/local/bin/minimserver-download.sh
 COPY checksum.txt /tmp/checksum.txt
