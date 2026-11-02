@@ -1,29 +1,33 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.5.1
 ARG TARGETARCH
 
-# Download the official MinimServer 2.2 Linux archive for each architecture.
+# Download the official MinimServer Linux archive for each architecture.
 # The archive checksums are verified before extraction.
 FROM --platform=linux/amd64 alpine:3.22 AS minimserver_amd64
-ARG MINIMSERVER_ESUM="b0ebeb11eac35dec5ca57c647a8a91a0b3b787c83c8f5c35bd782cfa3a6440c6"
 ARG MINIMSERVER_KIND="linux_x64_server"
 COPY minimserver-download.sh /usr/local/bin/minimserver-download.sh
+COPY checksum.txt /tmp/checksum.txt
 RUN apk add --no-cache bash curl && \
     mkdir -p /opt/minimserver && \
-    curl -LfsSo /tmp/minimserver.tar.gz "$(minimserver-download.sh -u "${MINIMSERVER_KIND}")" && \
-    echo "${MINIMSERVER_ESUM}  /tmp/minimserver.tar.gz" | sha256sum -c - && \
-    tar xf /tmp/minimserver.tar.gz -C /opt/minimserver --strip-components=1 && \
-    rm -f /tmp/minimserver.tar.gz
+    url="$(minimserver-download.sh -u "${MINIMSERVER_KIND}")" && \
+    file="${url##*/}" && \
+    curl -LfsSo "/tmp/${file}" "${url}" && \
+    (cd /tmp && grep -F "  ${file}" checksum.txt | sha256sum -c -) && \
+    tar xf "/tmp/${file}" -C /opt/minimserver --strip-components=1 && \
+    rm -f "/tmp/${file}"
 
 FROM --platform=linux/arm64 alpine:3.22 AS minimserver_arm64
-ARG MINIMSERVER_ESUM="5b9e028aafb842e3645ae4821b1b1a1639d3c76806907a2ce1b5f8309dde01db"
 ARG MINIMSERVER_KIND="linux_arm64_server"
 COPY minimserver-download.sh /usr/local/bin/minimserver-download.sh
+COPY checksum.txt /tmp/checksum.txt
 RUN apk add --no-cache bash curl && \
     mkdir -p /opt/minimserver && \
-    curl -LfsSo /tmp/minimserver.tar.gz "$(minimserver-download.sh -u "${MINIMSERVER_KIND}")" && \
-    echo "${MINIMSERVER_ESUM}  /tmp/minimserver.tar.gz" | sha256sum -c - && \
-    tar xf /tmp/minimserver.tar.gz -C /opt/minimserver --strip-components=1 && \
-    rm -f /tmp/minimserver.tar.gz
+    url="$(minimserver-download.sh -u "${MINIMSERVER_KIND}")" && \
+    file="${url##*/}" && \
+    curl -LfsSo "/tmp/${file}" "${url}" && \
+    (cd /tmp && grep -F "  ${file}" checksum.txt | sha256sum -c -) && \
+    tar xf "/tmp/${file}" -C /opt/minimserver --strip-components=1 && \
+    rm -f "/tmp/${file}"
 
 # Select the MinimServer archive for the requested build architecture.
 FROM minimserver_${TARGETARCH} AS minimserver

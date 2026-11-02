@@ -1,0 +1,69 @@
+name: MinimServer のチェックサムを更新
+
+# MinimServer は上流のアーカイブがファイル名そのままで更新される。
+# ビルドがチェックサム不一致で失敗したら、これを手動実行して checksum.txt の更新 PR を作る。
+# 更新内容は PR で確認してからマージする(ここが TOFU の信頼判断)。
+on:
+  workflow_dispatch:
+    inputs:
+      update:
+        description: "update 番号 (例: 276。update が無い場合は 0)。config.yaml の version を <ファイル名の major.minor>.<update> に更新する"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: アーカイブを取得して checksum.txt を再生成
+        run: |
+          set -euo pipefail
+          : > minimserver/checksum.txt
+          for kind in linux_x64_server linux_arm64_server; do
+            url="$(./minimserver/minimserver-download.sh -o dl "${kind}" | sed -n 1p)"
+            (cd dl && sha256sum "${url##*/}") >> minimserver/checksum.txt
+          done
+          cat minimserver/checksum.txt
+
+      - name: version を更新
+        env:
+          UPDATE: ${{ inputs.update }}
+        run: |
+          set -euo pipefail
+          [[ "${UPDATE}" =~ ^[0-9]+$ ]] || { echo "update は数字のみ: ${UPDATE}" >&2; exit 1; }
+          # アーカイブのファイル名 (MinimServer-<major.minor>-...) から major.minor を得る。全アーカイブで一致が必要
+          mm="$(sed -n 's/^[0-9a-f]*  MinimServer-\([0-9][0-9]*\.[0-9][0-9]*\)-.*/\1/p' minimserver/checksum.txt | sort -u)"
+          [ "$(wc -l <<<"${mm}")" -eq 1 ] && [ -n "${mm}" ] || { echo "ファイル名から major.minor を一意に特定できません: ${mm}" >&2; exit 1; }
+          VERSION="${mm}.${UPDATE}"
+          sed -i "s/^version: .*/version: \"${VERSION}\"/" minimserver/config.yaml
+          echo "VERSION=${VERSION}" >> "${GITHUB_ENV}"
+
+      - name: PR を作成
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "変更はありません(上流のアーカイブは checksum.txt と同じ)"
+            exit 0
+          fi
+          branch="update-minimserver-checksum-${GITHUB_RUN_ID}"
+          title="MinimServer のチェックサムを更新"
+          title="${title} (${VERSION})"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "${branch}"
+          git commit -am "${title}"
+          git push -u origin "${branch}"
+          gh pr create --title "${title}" --body "$(cat <<'EOF'
+          上流の MinimServer アーカイブの更新に追従して `checksum.txt` を再生成しました。
+
+          マージ前に差分(どのファイルのハッシュが変わったか)を確認してください。
+          EOF
+          )"

@@ -1,0 +1,2 @@
+b0ebeb11eac35dec5ca57c647a8a91a0b3b787c83c8f5c35bd782cfa3a6440c6  MinimServer-2.2-linux-intel.tar.gz
+5b9e028aafb842e3645ae4821b1b1a1639d3c76806907a2ce1b5f8309dde01db  MinimServer-2.2-linux-arm64.tar.gz
