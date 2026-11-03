@@ -1,5 +1,5 @@
 name: "MinimServer"
-description: "UPnP/DLNA music server"
+description: "UPnP/DLNA music server. Installing implies acceptance of the MinimServer 2 EULA (see README)."
 version: "2.2.275"
 slug: "minimserver"
 url: "https://github.com/yasu-hide/minimserver-docker"
@@ -20,7 +20,5 @@ map:
   - type: data
     path: /opt/minimserver/data
     read_only: false
-options:
-  accept_eula: false
-schema:
-  accept_eula: bool
+options: {}
+schema: {}
