@@ -20,5 +20,7 @@ map:
   - type: data
     path: /opt/minimserver/data
     read_only: false
-options: {}
-schema: {}
+options:
+  accept_eula: false
+schema:
+  accept_eula: bool
